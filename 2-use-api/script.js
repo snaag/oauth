@@ -26,17 +26,6 @@ function init() {
 }
 
 //! Access token
-function initUserInfo() {
-    if (gauth.isSignedIn.get()) {
-        console.log("logined");
-        var profile = gauth.currentUser.get().getBasicProfile();
-        console.log("profile", profile);
-    } else {
-        console.log("not logined");
-    }
-}
-
-//! Access token
 login.addEventListener("click", () => {
     gapi.auth2.authorize(
         {
