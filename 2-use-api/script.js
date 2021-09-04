@@ -64,7 +64,11 @@ login.addEventListener("click", () => {
 const handleSave = async () => {
     try {
         const calendarId = await getFirstCalendarId();
-        postSchedule(calendarId, window.randomDate, window.scheduleText);
+        const result = await postSchedule(
+            calendarId,
+            window.randomDate,
+            window.scheduleText
+        );
         window.alert("성공적으로 저장되었습니다!");
     } catch (error) {
         window.alert("문제가 발생했습니다.");
@@ -81,7 +85,6 @@ const getFirstCalendarId = async () => {
             Authorization: "Bearer " + window.accessToken,
         },
     });
-    console.log("list", result);
     return result?.data?.items[0]?.id;
 };
 
@@ -104,7 +107,7 @@ const postSchedule = async (calendarId, text = "schedule title", date) => {
             },
         }
     );
-    console.log(result);
+    return result;
 };
 
 //* event listener
