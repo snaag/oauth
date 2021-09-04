@@ -1,3 +1,6 @@
+//* access token 얻기 https://developers.google.com/identity/sign-in/web/reference
+//* 캘린더 API https://developers.google.com/calendar/api/v3/reference/calendarList/list
+
 const login = document.querySelector(".login");
 const selectDate = document.querySelector(".select-date button");
 const randomDate = document.querySelector(".select-date input");
@@ -13,6 +16,7 @@ const scopeList = [
 ];
 const scope = scopeList.join(" ");
 
+//! Access token
 function init() {
     gapi.load("auth2", onLoad);
     function onLoad() {
@@ -21,6 +25,7 @@ function init() {
     }
 }
 
+//! Access token
 function initUserInfo() {
     if (gauth.isSignedIn.get()) {
         console.log("logined");
@@ -31,10 +36,7 @@ function initUserInfo() {
     }
 }
 
-function handleButtonText(newText) {
-    login.innerHTML = newText;
-}
-
+//! Access token
 login.addEventListener("click", () => {
     gapi.auth2.authorize(
         {
@@ -58,6 +60,7 @@ login.addEventListener("click", () => {
     );
 });
 
+//! Calendar API
 const handleSave = async () => {
     try {
         const calendarId = await getFirstCalendarId();
@@ -69,6 +72,7 @@ const handleSave = async () => {
     }
 };
 
+//! Calendar API
 const getFirstCalendarId = async () => {
     const result = await axios({
         method: "get",
@@ -81,6 +85,7 @@ const getFirstCalendarId = async () => {
     return result?.data?.items[0]?.id;
 };
 
+//! Calendar API
 const postSchedule = async (calendarId, text = "schedule title", date) => {
     const result = await axios.post(
         `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events`,
@@ -102,18 +107,9 @@ const postSchedule = async (calendarId, text = "schedule title", date) => {
     console.log(result);
 };
 
-const generateDate = (year) => {
-    return (month) => {
-        return (day) => {
-            return [year, month, day].join("-");
-        };
-    };
-};
-
-const generate202109dd = generateDate("2021")("09");
-
+//* event listener
 selectDate.addEventListener("click", () => {
-    console.dir(randomDate);
+    const generate202109dd = generateDate("2021")("09");
     const date = generate202109dd(getRandomInt(10, 20));
     randomDate.value = date;
     window.randomDate = date;
@@ -127,8 +123,21 @@ save.addEventListener("click", () => {
     handleSave();
 });
 
+//* util
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
+}
+
+function handleButtonText(newText) {
+    login.innerHTML = newText;
+}
+
+function generateDate(year) {
+    return (month) => {
+        return (day) => {
+            return [year, month, day].join("-");
+        };
+    };
 }
